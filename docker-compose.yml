@@ -7,6 +7,8 @@ services:
       - '3000:3000'
     depends_on:
       - db
+    env_file:
+      - .env
 
   db:
     image: postgres:14
@@ -14,6 +16,7 @@ services:
       - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-
+    env_file:
+      - .env
 volumes:
   pgdata:
