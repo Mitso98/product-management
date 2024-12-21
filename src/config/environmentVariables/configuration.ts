@@ -56,14 +56,13 @@ class ConfigurationFactory {
 
     this.validateEnvironment(nodeEnv);
     this.validateDatabaseType(dbType);
-
     // Create and cache the configuration
     cachedConfig = {
       app: {
         [ConfigKeys.PORT]: parseInt(process.env[ConfigKeys.PORT], 10),
         [ConfigKeys.GLOBAL_PREFIX]: process.env[ConfigKeys.GLOBAL_PREFIX],
         [ConfigKeys.NODE_ENV]: nodeEnv as Environment,
-        [ConfigKeys.ALLOWED_ORIGINS]: process.env[ConfigKeys.ALLOWED_ORIGINS],
+        [ConfigKeys.ALLOWED_ORIGINS]: process.env[ConfigKeys.ALLOWED_ORIGINS]?.split(',') || '*',
         [ConfigKeys.RATE_LIMIT_TTL]: parseInt(
           process.env[ConfigKeys.RATE_LIMIT_TTL],
           10,

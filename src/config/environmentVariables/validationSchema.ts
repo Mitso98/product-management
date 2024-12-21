@@ -21,13 +21,25 @@ const configSchemaMap: Record<ConfigKeys, Joi.Schema> = {
   [ConfigKeys.RATE_LIMIT_MAX]: Joi.number().required(),
   [ConfigKeys.ALLOWED_ORIGINS]: Joi.alternatives()
     .try(
-      Joi.string().uri(),
-      Joi.array().items(Joi.string().uri()),
-      Joi.string().pattern(/^\*$/), // Allow wildcard
-      Joi.string().pattern(/^https?:\/\/[\w-]+(\.[\w-]+)+(:\d+)?(\/.*)?$/), // URL pattern
+      // Allow wildcard
+      Joi.string().valid('*'),
+
+      // Allow single URL
+      Joi.string().uri({
+        scheme: ['http', 'https'],
+      }),
+
+      // Allow comma-separated URLs
+      Joi.string().pattern(/^(https?:\/\/[^,\s]+)(,\s*https?:\/\/[^,\s]+)*$/),
+
+      // Allow array of URLs
+      Joi.array().items(
+        Joi.string().uri({
+          scheme: ['http', 'https'],
+        }),
+      ),
     )
-    .required()
-    .description('Allowed CORS origins - can be string, array, or "*"'),
+    .required(),
 };
 
 const validationSchema = Joi.object(configSchemaMap);
