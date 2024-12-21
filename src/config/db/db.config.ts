@@ -1,8 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { glob } from 'glob';
 import path from 'path';
-import { CONFIG_KEYS } from '../environmentVariables/configuration.constants';
 import { ENVIRONMENTS } from '../environmentVariables/environment.constants';
+import {
+  AppConfigInterface,
+  DatabaseConfigInterface,
+} from '../environmentVariables/configurationInterface.interface';
 
 const findEntityFiles = async (): Promise<string[]> => {
   const entityFiles = await glob('src/**/*.entity.{ts,js}', {
@@ -18,18 +21,18 @@ const getEntities = async () => {
 };
 
 export const getDatabaseConfig = async (configService: ConfigService) => {
+  const dbVars = configService.get<DatabaseConfigInterface>('database');
+  const appVars = configService.get<AppConfigInterface>('app');
+
   return {
-    type: configService.get(CONFIG_KEYS.DB_TYPE) as any,
-    host: configService.get<string>(CONFIG_KEYS.DB_HOST),
-    port: configService.get<number>(CONFIG_KEYS.DB_PORT),
-    username: configService.get<string>(CONFIG_KEYS.DB_USER),
-    password: configService.get<string>(CONFIG_KEYS.DB_PASSWORD),
-    database: configService.get<string>(CONFIG_KEYS.DB_NAME),
+    type: dbVars.DB_TYPE as any,
+    host: dbVars.DB_HOST,
+    port: dbVars.DB_PORT,
+    username: dbVars.DB_USER,
+    password: dbVars.DB_PASSWORD,
+    database: dbVars.DB_NAME,
     entities: await getEntities(),
-    synchronize:
-      configService.get<string>(CONFIG_KEYS.NODE_ENV) !==
-      ENVIRONMENTS.PRODUCTION,
-    logging:
-      configService.get(CONFIG_KEYS.NODE_ENV) === ENVIRONMENTS.DEVELOPMENT,
+    synchronize: appVars.NODE_ENV !== ENVIRONMENTS.PRODUCTION,
+    logging: appVars.NODE_ENV === ENVIRONMENTS.DEVELOPMENT,
   };
 };
