@@ -11,6 +11,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 import { ResponseInterceptor } from './common/interceptor/response-interceptor';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -36,6 +37,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.use(cookieParser());
 
   app.set('trust proxy', 'loopback');
 
