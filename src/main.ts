@@ -1,12 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { CONFIG_KEYS } from './config/environmentVariables/configuration.constants';
 import {
   AppConfigInterface,
   ConfigurationInterface,
-} from './config/environmentVariables/ConfigurationInterface.interface';
-import { config } from 'process';
+} from './config/environmentVariables/configurationInterface.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
