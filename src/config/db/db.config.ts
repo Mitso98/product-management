@@ -1,35 +1,23 @@
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import * as path from 'path';
-import * as fs from 'fs';
-import { ENVIRONMENTS } from '../environmentVariables/environment.constants';
+import { glob } from 'glob';
+import path from 'path';
 import { CONFIG_KEYS } from '../environmentVariables/configuration.constants';
+import { ENVIRONMENTS } from '../environmentVariables/environment.constants';
 
-const getEntities = (): Function[] => {
-  const entitiesPath = path.join(__dirname, '..', '..', 'entities');
-  return fs
-    .readdirSync(entitiesPath)
-    .filter(
-      (file) => file.endsWith('.entity.ts') || file.endsWith('.entity.js'),
-    )
-    .map((file) => {
-      const entityModule = require(path.join(entitiesPath, file));
-      const entityClass = Object.values(entityModule).find(
-        (exported) => typeof exported === 'function',
-      );
-      return entityClass;
-    });
+const findEntityFiles = async (): Promise<string[]> => {
+  const entityFiles = await glob('src/**/*.entity.{ts,js}', {
+    ignore: ['**/node_modules/**', '**/dist/**'],
+  });
+
+  return entityFiles.map((file) => path.resolve(file));
 };
 
-console.log('>>>', getEntities());
+const getEntities = async () => {
+  const entityPaths = await findEntityFiles();
+  return entityPaths.map((entityPath) => require(entityPath).default);
+};
 
-export const getDatabaseConfig = (
-  configService: ConfigService,
-): TypeOrmModuleOptions => {
-  console.log(
-    '###',
-    configService.get<string>(CONFIG_KEYS.NODE_ENV) !== ENVIRONMENTS.PRODUCTION,
-  );
+export const getDatabaseConfig = async (configService: ConfigService) => {
   return {
     type: configService.get(CONFIG_KEYS.DB_TYPE) as any,
     host: configService.get<string>(CONFIG_KEYS.DB_HOST),
@@ -37,7 +25,7 @@ export const getDatabaseConfig = (
     username: configService.get<string>(CONFIG_KEYS.DB_USER),
     password: configService.get<string>(CONFIG_KEYS.DB_PASSWORD),
     database: configService.get<string>(CONFIG_KEYS.DB_NAME),
-    entities: getEntities(),
+    entities: await getEntities(),
     synchronize:
       configService.get<string>(CONFIG_KEYS.NODE_ENV) !==
       ENVIRONMENTS.PRODUCTION,
