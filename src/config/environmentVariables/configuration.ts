@@ -1,14 +1,14 @@
 import { DatabaseType } from '../db/dbTypes.constants';
 import { ConfigurationInterface } from './configurationInterface.interface';
 import { CONFIG_KEYS } from './configuration.constants';
-import { Environment, ENVIRONMENTS } from './environment.constants';
+import { Environment } from './environment.constants';
 
 let cachedConfig: ConfigurationInterface | null = null;
 
 const isValidNodeEnv = (
   value: any,
-): value is (typeof ENVIRONMENTS)[keyof typeof ENVIRONMENTS] => {
-  return Object.values(ENVIRONMENTS).includes(value);
+): value is (typeof Environment)[keyof typeof Environment] => {
+  return Object.values(Environment).includes(value);
 };
 
 const isValidDatabaseType = (

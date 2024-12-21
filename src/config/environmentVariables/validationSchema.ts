@@ -1,12 +1,12 @@
 import * as Joi from 'joi';
 import { CONFIG_KEYS, ConfigKeys } from './configuration.constants';
-import { ENVIRONMENTS } from './environment.constants';
 import { DatabaseType } from '../db/dbTypes.constants';
+import { Environment } from './environment.constants';
 
 const configSchemaMap: Record<ConfigKeys, Joi.Schema> = {
   [CONFIG_KEYS.NODE_ENV]: Joi.string()
-    .valid(...Object.values(ENVIRONMENTS))
-    .default(ENVIRONMENTS.DEVELOPMENT),
+    .valid(...Object.values(Environment))
+    .default(Environment.DEVELOPMENT),
   [CONFIG_KEYS.GLOBAL_PREFIX]: Joi.string().required(),
   [CONFIG_KEYS.PORT]: Joi.number().required(),
   [CONFIG_KEYS.DB_HOST]: Joi.string().required(),

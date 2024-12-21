@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { glob } from 'glob';
 import path from 'path';
-import { ENVIRONMENTS } from '../environmentVariables/environment.constants';
+import { Environment } from '../environmentVariables/environment.constants';
 import {
   AppConfigInterface,
   DatabaseConfigInterface,
@@ -32,7 +32,7 @@ export const getDatabaseConfig = async (configService: ConfigService) => {
     password: dbVars.DB_PASSWORD,
     database: dbVars.DB_NAME,
     entities: await getEntities(),
-    synchronize: appVars.NODE_ENV !== ENVIRONMENTS.PRODUCTION,
-    logging: appVars.NODE_ENV === ENVIRONMENTS.DEVELOPMENT,
+    synchronize: appVars.NODE_ENV !== Environment.PRODUCTION,
+    logging: appVars.NODE_ENV === Environment.DEVELOPMENT,
   };
 };
