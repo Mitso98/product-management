@@ -1,4 +1,4 @@
-import { ConfigurationStructure } from './ConfigurationStructure.interface';
+import { ConfigurationStructure } from './configurationStructure.interface';
 import { CONFIG_KEYS } from './configuration.constants';
 import { ENVIRONMENTS } from './environment.constants';
 
