@@ -59,10 +59,15 @@ class ConfigurationFactory {
     // Create and cache the configuration
     cachedConfig = {
       app: {
+        [ConfigKeys.API_VERSION_PREFIX]:
+          process.env[ConfigKeys.API_VERSION_PREFIX] || 'v',
+        [ConfigKeys.API_DEFAULT_VERSION]:
+          process.env[ConfigKeys.API_DEFAULT_VERSION] || '1',
         [ConfigKeys.PORT]: parseInt(process.env[ConfigKeys.PORT], 10),
         [ConfigKeys.GLOBAL_PREFIX]: process.env[ConfigKeys.GLOBAL_PREFIX],
         [ConfigKeys.NODE_ENV]: nodeEnv as Environment,
-        [ConfigKeys.ALLOWED_ORIGINS]: process.env[ConfigKeys.ALLOWED_ORIGINS]?.split(',') || '*',
+        [ConfigKeys.ALLOWED_ORIGINS]:
+          process.env[ConfigKeys.ALLOWED_ORIGINS]?.split(',') || '*',
         [ConfigKeys.RATE_LIMIT_TTL]: parseInt(
           process.env[ConfigKeys.RATE_LIMIT_TTL],
           10,

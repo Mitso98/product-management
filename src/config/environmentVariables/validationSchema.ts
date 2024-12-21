@@ -19,6 +19,8 @@ const configSchemaMap: Record<ConfigKeys, Joi.Schema> = {
     .required(),
   [ConfigKeys.RATE_LIMIT_TTL]: Joi.number().required(),
   [ConfigKeys.RATE_LIMIT_MAX]: Joi.number().required(),
+  [ConfigKeys.API_VERSION_PREFIX]: Joi.string().default('v'),
+  [ConfigKeys.API_DEFAULT_VERSION]: Joi.string().default('1'),
   [ConfigKeys.ALLOWED_ORIGINS]: Joi.alternatives()
     .try(
       // Allow wildcard

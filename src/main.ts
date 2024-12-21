@@ -57,8 +57,8 @@ async function bootstrap() {
   // Enable API versioning
   app.enableVersioning({
     type: VersioningType.URI,
-    prefix: 'v',
-    defaultVersion: '1',
+    prefix: appVars.API_VERSION_PREFIX,
+    defaultVersion: appVars.API_DEFAULT_VERSION,
   });
 
   const config = new DocumentBuilder()

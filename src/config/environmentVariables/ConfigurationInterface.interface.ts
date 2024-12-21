@@ -9,6 +9,8 @@ export interface AppConfigInterface {
   [ConfigKeys.ALLOWED_ORIGINS]: string | string[] | '*';
   [ConfigKeys.RATE_LIMIT_TTL]: number;
   [ConfigKeys.RATE_LIMIT_MAX]: number;
+  [ConfigKeys.API_VERSION_PREFIX]: string;
+  [ConfigKeys.API_DEFAULT_VERSION]: string;
 }
 
 export interface DatabaseConfigInterface {
