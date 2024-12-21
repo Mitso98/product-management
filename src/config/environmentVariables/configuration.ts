@@ -1,6 +1,6 @@
 import { DatabaseType } from '../db/dbTypes.constants';
 import { ConfigurationInterface } from './configurationInterface.interface';
-import { CONFIG_KEYS } from './configuration.constants';
+import { ConfigKeys } from './configuration.constants';
 import { Environment } from './environment.constants';
 
 let cachedConfig: ConfigurationInterface | null = null;
@@ -45,14 +45,14 @@ class ConfigurationFactory {
     }
 
     // Get all config keys and filter out any optional ones
-    const requiredEnvVars = Object.values(CONFIG_KEYS).filter(
+    const requiredEnvVars = Object.values(ConfigKeys).filter(
       (key) => ![].includes(key), // optional keys here
     );
 
     this.validateRequiredEnvVars(requiredEnvVars);
 
-    const nodeEnv = process.env[CONFIG_KEYS.NODE_ENV];
-    const dbType = process.env[CONFIG_KEYS.DB_TYPE];
+    const nodeEnv = process.env[ConfigKeys.NODE_ENV];
+    const dbType = process.env[ConfigKeys.DB_TYPE];
 
     this.validateEnvironment(nodeEnv);
     this.validateDatabaseType(dbType);
@@ -60,17 +60,26 @@ class ConfigurationFactory {
     // Create and cache the configuration
     cachedConfig = {
       app: {
-        [CONFIG_KEYS.PORT]: parseInt(process.env[CONFIG_KEYS.PORT], 10),
-        [CONFIG_KEYS.GLOBAL_PREFIX]: process.env[CONFIG_KEYS.GLOBAL_PREFIX],
-        [CONFIG_KEYS.NODE_ENV]: nodeEnv as Environment,
+        [ConfigKeys.PORT]: parseInt(process.env[ConfigKeys.PORT], 10),
+        [ConfigKeys.GLOBAL_PREFIX]: process.env[ConfigKeys.GLOBAL_PREFIX],
+        [ConfigKeys.NODE_ENV]: nodeEnv as Environment,
+        [ConfigKeys.ALLOWED_ORIGINS]: process.env[ConfigKeys.ALLOWED_ORIGINS],
+        [ConfigKeys.RATE_LIMIT_TTL]: parseInt(
+          process.env[ConfigKeys.RATE_LIMIT_TTL],
+          10,
+        ),
+        [ConfigKeys.RATE_LIMIT_MAX]: parseInt(
+          process.env[ConfigKeys.RATE_LIMIT_MAX],
+          10,
+        ),
       },
       database: {
-        [CONFIG_KEYS.DB_HOST]: process.env[CONFIG_KEYS.DB_HOST],
-        [CONFIG_KEYS.DB_PORT]: parseInt(process.env[CONFIG_KEYS.DB_PORT], 10),
-        [CONFIG_KEYS.DB_USER]: process.env[CONFIG_KEYS.DB_USER],
-        [CONFIG_KEYS.DB_PASSWORD]: process.env[CONFIG_KEYS.DB_PASSWORD],
-        [CONFIG_KEYS.DB_NAME]: process.env[CONFIG_KEYS.DB_NAME],
-        [CONFIG_KEYS.DB_TYPE]: dbType as DatabaseType,
+        [ConfigKeys.DB_HOST]: process.env[ConfigKeys.DB_HOST],
+        [ConfigKeys.DB_PORT]: parseInt(process.env[ConfigKeys.DB_PORT], 10),
+        [ConfigKeys.DB_USER]: process.env[ConfigKeys.DB_USER],
+        [ConfigKeys.DB_PASSWORD]: process.env[ConfigKeys.DB_PASSWORD],
+        [ConfigKeys.DB_NAME]: process.env[ConfigKeys.DB_NAME],
+        [ConfigKeys.DB_TYPE]: dbType as DatabaseType,
       },
     };
 
