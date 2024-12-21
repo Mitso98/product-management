@@ -7,9 +7,10 @@ import {
   AppConfigInterface,
   ConfigurationInterface,
 } from './config/environmentVariables/configurationInterface.interface';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService =
     app.get<ConfigService<ConfigurationInterface>>(ConfigService);
   const appVars = configService.get<AppConfigInterface>('app');
@@ -27,7 +28,19 @@ async function bootstrap() {
   );
 
   // Helmet Security Headers
-  app.use(helmet());
+  app.use(
+    helmet({
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          scriptSrc: ["'self'"],
+        },
+      },
+    }),
+  );
 
   // CORS Configuration
   app.enableCors({
@@ -35,6 +48,8 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });
+
+  app.set('trust proxy', 'loopback');
 
   app.setGlobalPrefix(appVars.GLOBAL_PREFIX);
 
