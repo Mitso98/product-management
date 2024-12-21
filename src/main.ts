@@ -2,22 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { CONFIG_KEYS } from './config/environmentVariables/configuration.constants';
-import { ConfigurationStructure } from './config/environmentVariables/configurationStructure.interface';
+import {
+  AppConfigInterface,
+  ConfigurationInterface,
+} from './config/environmentVariables/ConfigurationInterface.interface';
+import { config } from 'process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService =
-    app.get<ConfigService<ConfigurationStructure>>(ConfigService);
+    app.get<ConfigService<ConfigurationInterface>>(ConfigService);
 
-  const port = configService.get<ConfigurationStructure['PORT']>(
-    CONFIG_KEYS.PORT,
-  );
-  const globalPrefix = configService.get<
-    ConfigurationStructure['GLOBAL_PREFIX']
-  >(CONFIG_KEYS.GLOBAL_PREFIX);
+  const appVars = configService.get<AppConfigInterface>('app');
 
-  app.setGlobalPrefix(globalPrefix);
+  app.setGlobalPrefix(appVars.GLOBAL_PREFIX);
 
-  await app.listen(port);
+  await app.listen(appVars.PORT);
 }
 bootstrap();
