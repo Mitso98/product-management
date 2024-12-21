@@ -12,4 +12,5 @@ ENV_FILE="development.local.env"
 COMPOSE_FILE="docker-compose.dev.yml"
 
 # Run the docker-compose command
-docker-compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up --build
+docker-compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" build --no-cache
+docker-compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" up 
