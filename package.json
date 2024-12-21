@@ -16,7 +16,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:debug": "node --inspect-brk -r tsconfig-s/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
@@ -36,7 +36,6 @@
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
     "express-rate-limit": "^7.5.0",
-    "glob": "^11.0.0",
     "helmet": "^8.0.0",
     "joi": "^17.13.3",
     "nest-winston": "^1.9.7",
