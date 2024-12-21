@@ -9,6 +9,8 @@ import {
 } from './config/environmentVariables/configurationInterface.interface';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as compression from 'compression';
+import { ResponseInterceptor } from './common/interceptor/response-interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,6 +19,8 @@ async function bootstrap() {
   const appVars = configService.get<AppConfigInterface>('app');
 
   app.setGlobalPrefix(appVars.GLOBAL_PREFIX);
+
+  app.use(compression());
 
   // Helmet Security Headers
   app.use(
@@ -33,14 +37,9 @@ async function bootstrap() {
     }),
   );
 
-  // CORS Configuration
-  app.enableCors({
-    origin: appVars.NODE_ENV === 'development' ? '*' : appVars.ALLOWED_ORIGINS,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
-  });
-
   app.set('trust proxy', 'loopback');
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   // Global Validation Pipe
   app.useGlobalPipes(
@@ -53,6 +52,12 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.enableCors({
+    origin: appVars.NODE_ENV === 'development' ? '*' : appVars.ALLOWED_ORIGINS,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
+  });
 
   // Enable API versioning
   app.enableVersioning({
