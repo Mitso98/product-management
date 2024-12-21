@@ -15,6 +15,8 @@ import { LoggerModule } from './logger/logger.module';
 import { RequestLoggerMiddleware } from './logger/request-logger/request-logger.middleware';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AppConfigInterface } from './config/environmentVariables/configurationInterface.interface';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { AppConfigInterface } from './config/environmentVariables/configurationI
       },
     }),
     LoggerModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [
