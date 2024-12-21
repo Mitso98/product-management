@@ -6,7 +6,6 @@ import configuration from './config/environmentVariables/configuration';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './config/db/db.config';
-import { Product } from './entities/product.entity';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { Product } from './entities/product.entity';
       inject: [ConfigService],
       useFactory: getDatabaseConfig,
     }),
-    TypeOrmModule.forFeature([Product]),
   ],
   controllers: [AppController],
   providers: [AppService],
