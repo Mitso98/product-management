@@ -76,6 +76,8 @@ class ConfigurationFactory {
           process.env[ConfigKeys.RATE_LIMIT_MAX],
           10,
         ),
+        [ConfigKeys.JWT_PRIVATE_KEY]: process.env[ConfigKeys.JWT_PRIVATE_KEY],
+        [ConfigKeys.JWT_PUBLIC_KEY]: process.env[ConfigKeys.JWT_PUBLIC_KEY],
       },
       database: {
         [ConfigKeys.DB_HOST]: process.env[ConfigKeys.DB_HOST],

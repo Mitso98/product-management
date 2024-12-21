@@ -11,6 +11,8 @@ export interface AppConfigInterface {
   [ConfigKeys.RATE_LIMIT_MAX]: number;
   [ConfigKeys.API_VERSION_PREFIX]: string;
   [ConfigKeys.API_DEFAULT_VERSION]: string;
+  [ConfigKeys.JWT_PRIVATE_KEY]: string;
+  [ConfigKeys.JWT_PUBLIC_KEY]: string;
 }
 
 export interface DatabaseConfigInterface {
