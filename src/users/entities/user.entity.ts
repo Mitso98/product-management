@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  BeforeUpdate,
+  Index,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { normalizeEmail } from '../../common/utils/email.utils';
 
 export enum UserRole {
   USER = 'user',
@@ -15,11 +18,18 @@ export enum UserRole {
 }
 
 @Entity('users')
+@Index('idx_user_email', ['email'], { unique: true })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({
+    unique: true,
+    transformer: {
+      to: (value: string) => normalizeEmail(value),
+      from: (value: string) => value,
+    },
+  })
   email: string;
 
   @Column()
@@ -38,6 +48,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  normalizeEmail() {
+    this.email = normalizeEmail(this.email);
+  }
 
   @BeforeInsert()
   async hashPassword() {
