@@ -3,11 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import {
-  ThrottlerGuard,
-  ThrottlerModule,
-} from '@nestjs/throttler';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import validationSchema from './config/environmentVariables/validationSchema';
 import configuration from './config/environmentVariables/configuration';
 import { getDatabaseConfig } from './config/db/db.config';
@@ -18,6 +15,8 @@ import { AppConfigInterface } from './config/environmentVariables/configurationI
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { CacheInterceptor } from './cache/interceptors/cache.interceptor';
+import { RedisCacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -47,6 +46,7 @@ import { ProductsModule } from './products/products.module';
     AuthModule,
     UsersModule,
     ProductsModule,
+    RedisCacheModule,
   ],
   controllers: [AppController],
   providers: [
@@ -58,6 +58,10 @@ import { ProductsModule } from './products/products.module';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
   ],
 })
