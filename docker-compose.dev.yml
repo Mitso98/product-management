@@ -11,6 +11,11 @@ services:
     env_file:
       - development.local.env
     command: npm run start:dev
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app-network
 
   db:
     container_name: ${DB_HOST}
@@ -25,8 +30,24 @@ services:
       - pgdata:/var/lib/postgresql/data
     env_file:
       - development.local.env
+    networks:
+      - app-network
 
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 
 volumes:
   pgdata: {}
+  redis_data: {}

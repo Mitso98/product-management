@@ -5,16 +5,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "${PORT}:${PORT}"
-    depends_on:
-      - ${DB_HOST}
+    restart: always
     env_file:
       - .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app-network
 
   db:
     container_name: ${DB_HOST}
     image: postgres:14
     ports:
       - '5432:5432'
+    restart: always
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -23,8 +28,24 @@ services:
       - pgdata:/var/lib/postgresql/data
     env_file:
       - .env
+    networks:
+      - app-network
 
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
 
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   pgdata: {}
+  redis_data: {}
