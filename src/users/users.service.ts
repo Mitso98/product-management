@@ -6,6 +6,7 @@ import { RegisterDto } from '../auth/dto/register.dto';
 import { normalizeEmail } from '../common/utils/email.utils';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { LoggerService } from 'src/logger/logger.service';
 
 @Injectable()
 export class UsersService {
@@ -13,8 +14,8 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private configService: ConfigService,
+    private readonly logger: LoggerService,
   ) {
-    // Call initSuperAdmin when service is created
     this.initSuperAdmin();
   }
 
@@ -26,7 +27,6 @@ export class UsersService {
       );
 
       if (!adminExists) {
-        // Create super admin if doesn't exist
         await this.usersRepository.save({
           email: this.configService.get<string>('SUPER_ADMIN_EMAIL'),
           password: await bcrypt.hash(
@@ -37,7 +37,13 @@ export class UsersService {
         });
       }
     } catch (error) {
-      console.error('Failed to initialize super admin:', error);
+      this.logger.error('Failed to initialize super admin:', {
+        error: error instanceof Error ? error.message : error,
+        stack: error instanceof Error ? error.stack : undefined,
+        context: 'UsersService.initSuperAdmin',
+      });
+
+      throw error;
     }
   }
 
