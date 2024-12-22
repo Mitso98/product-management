@@ -61,25 +61,13 @@ export class ProductsService {
     id: string,
     updateProductDto: Partial<CreateProductDto>,
   ): Promise<Product> {
-    try {
-      const product = await this.findOne(id);
-      Object.assign(product, updateProductDto);
-      return await this.productRepository.save(product);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Failed to update product: ${error.message}`,
-      );
-    }
+    const product = await this.findOne(id);
+    Object.assign(product, updateProductDto);
+    return await this.productRepository.save(product);
   }
 
   async remove(id: string): Promise<void> {
-    try {
-      const product = await this.findOne(id);
-      await this.productRepository.remove(product);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Failed to remove product: ${error.message}`,
-      );
-    }
+    const product = await this.findOne(id);
+    await this.productRepository.remove(product);
   }
 }
