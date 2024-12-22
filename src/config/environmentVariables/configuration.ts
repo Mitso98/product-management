@@ -17,7 +17,7 @@ const isValidDatabaseType = (
   return Object.values(DatabaseType).includes(value);
 };
 
-class ConfigurationFactory {
+export class ConfigurationFactory {
   private static validateRequiredEnvVars(requiredVars: string[]): void {
     const missing = requiredVars.filter((key) => !process.env[key]);
     if (missing.length > 0) {
