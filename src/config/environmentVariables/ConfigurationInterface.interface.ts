@@ -11,10 +11,23 @@ export interface AppConfigInterface {
   [ConfigKeys.RATE_LIMIT_MAX]: number;
   [ConfigKeys.API_VERSION_PREFIX]: string;
   [ConfigKeys.API_DEFAULT_VERSION]: string;
+}
+
+export interface JwtConfigInterface {
   [ConfigKeys.JWT_SECRET]: string;
   [ConfigKeys.JWT_EXPIRES_IN]: string;
+}
+
+export interface SuperAdminConfigInterface {
   [ConfigKeys.SUPER_ADMIN_EMAIL]: string;
   [ConfigKeys.SUPER_ADMIN_PASSWORD]: string;
+}
+
+export interface RedisConfigInterface {
+  [ConfigKeys.REDIS_HOST]: string;
+  [ConfigKeys.REDIS_PORT]: number;
+  [ConfigKeys.CACHE_TTL]: number;
+  [ConfigKeys.CACHE_MAX_ITEMS]: number;
 }
 
 export interface DatabaseConfigInterface {
@@ -28,5 +41,8 @@ export interface DatabaseConfigInterface {
 
 export interface ConfigurationInterface {
   app: AppConfigInterface;
+  jwt: JwtConfigInterface;
+  superAdmin: SuperAdminConfigInterface;
+  redis: RedisConfigInterface;
   database: DatabaseConfigInterface;
 }

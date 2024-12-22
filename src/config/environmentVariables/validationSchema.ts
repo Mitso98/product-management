@@ -25,6 +25,10 @@ const configSchemaMap: Record<ConfigKeys, Joi.Schema> = {
   [ConfigKeys.JWT_EXPIRES_IN]: Joi.string().required(),
   [ConfigKeys.SUPER_ADMIN_EMAIL]: Joi.string().email().required(),
   [ConfigKeys.SUPER_ADMIN_PASSWORD]: Joi.string().required(),
+  [ConfigKeys.REDIS_HOST]: Joi.string().required(),
+  [ConfigKeys.REDIS_PORT]: Joi.number().required(),
+  [ConfigKeys.CACHE_TTL]: Joi.number().required(),
+  [ConfigKeys.CACHE_MAX_ITEMS]: Joi.number().required(),
   [ConfigKeys.ALLOWED_ORIGINS]: Joi.alternatives()
     .try(
       // Allow wildcard

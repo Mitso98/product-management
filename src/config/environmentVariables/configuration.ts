@@ -59,10 +59,6 @@ class ConfigurationFactory {
     // Create and cache the configuration
     cachedConfig = {
       app: {
-        [ConfigKeys.API_VERSION_PREFIX]:
-          process.env[ConfigKeys.API_VERSION_PREFIX] || 'v',
-        [ConfigKeys.API_DEFAULT_VERSION]:
-          process.env[ConfigKeys.API_DEFAULT_VERSION] || '1',
         [ConfigKeys.PORT]: parseInt(process.env[ConfigKeys.PORT], 10),
         [ConfigKeys.GLOBAL_PREFIX]: process.env[ConfigKeys.GLOBAL_PREFIX],
         [ConfigKeys.NODE_ENV]: nodeEnv as Environment,
@@ -76,12 +72,32 @@ class ConfigurationFactory {
           process.env[ConfigKeys.RATE_LIMIT_MAX],
           10,
         ),
+        [ConfigKeys.API_VERSION_PREFIX]:
+          process.env[ConfigKeys.API_VERSION_PREFIX] || 'v',
+        [ConfigKeys.API_DEFAULT_VERSION]:
+          process.env[ConfigKeys.API_DEFAULT_VERSION] || '1',
+      },
+      jwt: {
         [ConfigKeys.JWT_SECRET]: process.env[ConfigKeys.JWT_SECRET],
         [ConfigKeys.JWT_EXPIRES_IN]: process.env[ConfigKeys.JWT_EXPIRES_IN],
+      },
+      superAdmin: {
         [ConfigKeys.SUPER_ADMIN_EMAIL]:
           process.env[ConfigKeys.SUPER_ADMIN_EMAIL],
         [ConfigKeys.SUPER_ADMIN_PASSWORD]:
           process.env[ConfigKeys.SUPER_ADMIN_PASSWORD],
+      },
+      redis: {
+        [ConfigKeys.REDIS_HOST]: process.env[ConfigKeys.REDIS_HOST],
+        [ConfigKeys.REDIS_PORT]: parseInt(
+          process.env[ConfigKeys.REDIS_PORT],
+          10,
+        ),
+        [ConfigKeys.CACHE_TTL]: parseInt(process.env[ConfigKeys.CACHE_TTL], 10),
+        [ConfigKeys.CACHE_MAX_ITEMS]: parseInt(
+          process.env[ConfigKeys.CACHE_MAX_ITEMS],
+          10,
+        ),
       },
       database: {
         [ConfigKeys.DB_HOST]: process.env[ConfigKeys.DB_HOST],
