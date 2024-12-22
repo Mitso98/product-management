@@ -58,7 +58,6 @@ describe('ConfigurationFactory', () => {
     expect(ConfigurationFactory.createConfiguration).toHaveBeenCalledTimes(1);
   });
 
-  // Add more specific tests for validation logic
   it('should validate environment correctly', () => {
     const invalidConfig = { ...mockConfig };
     invalidConfig.app.NODE_ENV = 'invalid' as Environment;
@@ -71,6 +70,66 @@ describe('ConfigurationFactory', () => {
 
     expect(() => ConfigurationFactory.createConfiguration()).toThrow(
       'Invalid NODE_ENV value: invalid',
+    );
+  });
+
+  it('should validate database type correctly', () => {
+    const invalidConfig = { ...mockConfig };
+    invalidConfig.database.DB_TYPE = 'invalid' as DatabaseType;
+
+    (
+      ConfigurationFactory.createConfiguration as jest.Mock
+    ).mockImplementationOnce(() => {
+      throw new Error('Invalid DB_TYPE value: invalid');
+    });
+
+    expect(() => ConfigurationFactory.createConfiguration()).toThrow(
+      'Invalid DB_TYPE value: invalid',
+    );
+  });
+
+  it('should validate JWT configuration correctly', () => {
+    const invalidConfig = { ...mockConfig };
+    invalidConfig.jwt.JWT_SECRET = '';
+
+    (
+      ConfigurationFactory.createConfiguration as jest.Mock
+    ).mockImplementationOnce(() => {
+      throw new Error('JWT_SECRET cannot be empty');
+    });
+
+    expect(() => ConfigurationFactory.createConfiguration()).toThrow(
+      'JWT_SECRET cannot be empty',
+    );
+  });
+
+  it('should validate Redis configuration correctly', () => {
+    const invalidConfig = { ...mockConfig };
+    invalidConfig.redis.REDIS_PORT = -1;
+
+    (
+      ConfigurationFactory.createConfiguration as jest.Mock
+    ).mockImplementationOnce(() => {
+      throw new Error('Invalid REDIS_PORT value: -1');
+    });
+
+    expect(() => ConfigurationFactory.createConfiguration()).toThrow(
+      'Invalid REDIS_PORT value: -1',
+    );
+  });
+
+  it('should validate Super Admin configuration correctly', () => {
+    const invalidConfig = { ...mockConfig };
+    invalidConfig.superAdmin.SUPER_ADMIN_EMAIL = 'invalid-email';
+
+    (
+      ConfigurationFactory.createConfiguration as jest.Mock
+    ).mockImplementationOnce(() => {
+      throw new Error('Invalid SUPER_ADMIN_EMAIL value: invalid-email');
+    });
+
+    expect(() => ConfigurationFactory.createConfiguration()).toThrow(
+      'Invalid SUPER_ADMIN_EMAIL value: invalid-email',
     );
   });
 });
