@@ -75,8 +75,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .addServer(`http://localhost:${appVars.PORT}`)
+    .addCookieAuth('Authentication')
     .build();
 
+  // EX:  http://localhost:8000/api/docs
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`${appVars.GLOBAL_PREFIX}/docs`, app, document, {
     swaggerOptions: {
