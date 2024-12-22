@@ -13,6 +13,8 @@ export interface AppConfigInterface {
   [ConfigKeys.API_DEFAULT_VERSION]: string;
   [ConfigKeys.JWT_SECRET]: string;
   [ConfigKeys.JWT_EXPIRES_IN]: string;
+  [ConfigKeys.SUPER_ADMIN_EMAIL]: string;
+  [ConfigKeys.SUPER_ADMIN_PASSWORD]: string;
 }
 
 export interface DatabaseConfigInterface {

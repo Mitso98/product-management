@@ -1,16 +1,45 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { normalizeEmail } from '../common/utils/email.utils';
+import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    // Call initSuperAdmin when service is created
+    this.initSuperAdmin();
+  }
+
+  private async initSuperAdmin() {
+    try {
+      // Check if super admin exists
+      const adminExists = await this.findByEmail(
+        this.configService.get<string>('SUPER_ADMIN_EMAIL'),
+      );
+
+      if (!adminExists) {
+        // Create super admin if doesn't exist
+        await this.usersRepository.save({
+          email: this.configService.get<string>('SUPER_ADMIN_EMAIL'),
+          password: await bcrypt.hash(
+            this.configService.get<string>('SUPER_ADMIN_PASSWORD'),
+            10,
+          ),
+          role: UserRole.ADMIN,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to initialize super admin:', error);
+    }
+  }
 
   async create(registerDto: RegisterDto): Promise<User> {
     const normalizedEmail = normalizeEmail(registerDto.email);
@@ -23,6 +52,7 @@ export class UsersService {
     const user = this.usersRepository.create({
       ...registerDto,
       email: normalizedEmail,
+      role: UserRole.USER, // Force all registrations to be regular users
     });
 
     return this.usersRepository.save(user);

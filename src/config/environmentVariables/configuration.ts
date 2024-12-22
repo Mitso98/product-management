@@ -78,6 +78,10 @@ class ConfigurationFactory {
         ),
         [ConfigKeys.JWT_SECRET]: process.env[ConfigKeys.JWT_SECRET],
         [ConfigKeys.JWT_EXPIRES_IN]: process.env[ConfigKeys.JWT_EXPIRES_IN],
+        [ConfigKeys.SUPER_ADMIN_EMAIL]:
+          process.env[ConfigKeys.SUPER_ADMIN_EMAIL],
+        [ConfigKeys.SUPER_ADMIN_PASSWORD]:
+          process.env[ConfigKeys.SUPER_ADMIN_PASSWORD],
       },
       database: {
         [ConfigKeys.DB_HOST]: process.env[ConfigKeys.DB_HOST],

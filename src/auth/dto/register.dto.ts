@@ -33,13 +33,4 @@ export class RegisterDto {
   @IsString()
   @MinLength(8)
   password: string;
-
-  @ApiProperty({
-    enum: UserRole,
-    default: UserRole.USER,
-    description: 'User role',
-  })
-  @IsEnum(UserRole)
-  @IsOptional()
-  role?: UserRole;
 }
