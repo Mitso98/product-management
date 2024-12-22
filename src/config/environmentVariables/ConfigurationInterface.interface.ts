@@ -12,6 +12,7 @@ export interface AppConfigInterface {
   [ConfigKeys.API_VERSION_PREFIX]: string;
   [ConfigKeys.API_DEFAULT_VERSION]: string;
   [ConfigKeys.JWT_SECRET]: string;
+  [ConfigKeys.JWT_EXPIRES_IN]: string;
 }
 
 export interface DatabaseConfigInterface {

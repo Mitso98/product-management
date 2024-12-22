@@ -22,6 +22,7 @@ const configSchemaMap: Record<ConfigKeys, Joi.Schema> = {
   [ConfigKeys.API_VERSION_PREFIX]: Joi.string().default('v'),
   [ConfigKeys.API_DEFAULT_VERSION]: Joi.string().default('1'),
   [ConfigKeys.JWT_SECRET]: Joi.string().required(),
+  [ConfigKeys.JWT_EXPIRES_IN]: Joi.string().required(),
   [ConfigKeys.ALLOWED_ORIGINS]: Joi.alternatives()
     .try(
       // Allow wildcard

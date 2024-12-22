@@ -77,6 +77,7 @@ class ConfigurationFactory {
           10,
         ),
         [ConfigKeys.JWT_SECRET]: process.env[ConfigKeys.JWT_SECRET],
+        [ConfigKeys.JWT_EXPIRES_IN]: process.env[ConfigKeys.JWT_EXPIRES_IN],
       },
       database: {
         [ConfigKeys.DB_HOST]: process.env[ConfigKeys.DB_HOST],
