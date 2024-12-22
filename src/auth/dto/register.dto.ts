@@ -1,13 +1,5 @@
-import {
-  IsEmail,
-  IsString,
-  MinLength,
-  IsEnum,
-  IsOptional,
-  Matches,
-} from 'class-validator';
+import { IsEmail, IsString, MinLength, Matches } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { UserRole } from '../../users/entities/user.entity';
 import { normalizeEmail } from 'src/common/utils/email.utils';
 import { ApiProperty } from '@nestjs/swagger';
 
