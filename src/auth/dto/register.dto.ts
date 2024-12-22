@@ -9,8 +9,13 @@ import {
 import { Transform } from 'class-transformer';
 import { UserRole } from '../../users/entities/user.entity';
 import { normalizeEmail } from 'src/common/utils/email.utils';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterDto {
+  @ApiProperty({
+    example: 'user@example.com',
+    description: 'User email address',
+  })
   @IsEmail()
   @Transform(({ value }) => normalizeEmail(value))
   @Matches(
@@ -21,10 +26,19 @@ export class RegisterDto {
   )
   email: string;
 
+  @ApiProperty({
+    example: 'Password123!',
+    description: 'User password - minimum 8 characters',
+  })
   @IsString()
   @MinLength(8)
   password: string;
 
+  @ApiProperty({
+    enum: UserRole,
+    default: UserRole.USER,
+    description: 'User role',
+  })
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;
