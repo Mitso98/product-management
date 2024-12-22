@@ -32,7 +32,12 @@ export class CacheInterceptor implements NestInterceptor {
     const cacheKey = this.generateCacheKey(request);
 
     // Handle cache invalidation for PUT and DELETE requests
-    if (request.method === 'PUT' || request.method === 'DELETE') {
+    if (
+      request.method === 'PUT' ||
+      request.method === 'DELETE' ||
+      request.method === 'POST' ||
+      request.method === 'PATCH'
+    ) {
       await this.invalidateCache(request.path);
       return next.handle();
     }
@@ -68,12 +73,13 @@ export class CacheInterceptor implements NestInterceptor {
 
   private async invalidateCache(path: string): Promise<void> {
     try {
-      // Get all cache keys
       const keys = await this.cacheManager.store.keys();
-      
-      // Find and delete all cache entries that match the path
-      const matchingKeys = keys.filter((key: string) => key.startsWith(path));
-      
+
+      const resourceName = this.extractResourceName(path);
+
+      const matchingKeys = keys.filter((key: string) =>
+        key.includes(resourceName),
+      );
       for (const key of matchingKeys) {
         await this.cacheManager.del(key);
         this.logger.debug(`Cache invalidated for key: ${key}`);
@@ -91,5 +97,10 @@ export class CacheInterceptor implements NestInterceptor {
     } catch (error) {
       this.logger.error('Redis connection error:', error);
     }
+  }
+
+  private extractResourceName(path: string): string {
+    const match = path.match(/\/api\/v\d+\/(\w+)/);
+    return match?.[1] || '';
   }
 }
