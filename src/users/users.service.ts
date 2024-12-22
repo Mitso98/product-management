@@ -20,31 +20,22 @@ export class UsersService {
   }
 
   private async initSuperAdmin() {
-    try {
-      // Check if super admin exists
-      const adminExists = await this.findByEmail(
-        this.configService.get<string>('SUPER_ADMIN_EMAIL'),
-      );
+    // Check if super admin exists
+    const adminExists = await this.findByEmail(
+      this.configService.get<string>('SUPER_ADMIN_EMAIL'),
+    );
 
-      if (!adminExists) {
-        await this.usersRepository.save({
-          email: this.configService.get<string>('SUPER_ADMIN_EMAIL'),
-          password: await bcrypt.hash(
-            this.configService.get<string>('SUPER_ADMIN_PASSWORD'),
-            10,
-          ),
-          role: UserRole.ADMIN,
-        });
-      }
-    } catch (error) {
-      this.logger.error('Failed to initialize super admin:', {
-        error: error instanceof Error ? error.message : error,
-        stack: error instanceof Error ? error.stack : undefined,
-        context: 'UsersService.initSuperAdmin',
+    if (!adminExists) {
+      await this.usersRepository.save({
+        email: this.configService.get<string>('SUPER_ADMIN_EMAIL'),
+        password: await bcrypt.hash(
+          this.configService.get<string>('SUPER_ADMIN_PASSWORD'),
+          10,
+        ),
+        role: UserRole.ADMIN,
       });
-
-      throw error;
     }
+    this.logger.debug('Super admin created', 'UsersService');
   }
 
   async create(registerDto: RegisterDto): Promise<User> {
